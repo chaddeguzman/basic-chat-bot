@@ -31,7 +31,7 @@ function parseGeminiText(data) {
 // --- Main Gemini Function ---
 async function askGemini(prompt, options = {}) {
   if (API_KEY_PLACEHOLDERS.has(API_KEY)) {
-    throw new Error('Gemini API key is not configured. Replace __CHATBOT_API__ before using chat_api.js.');
+    throw new Error('Gemini API key is not configured. Replace the API key placeholder before using chat_api.js.');
   }
 
   const response = await fetch(API_URL, {
