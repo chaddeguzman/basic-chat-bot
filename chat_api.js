@@ -42,7 +42,7 @@ function addMemory(text) {
 
   const memory = {
     text: cleanText,
-    createdAt: new Date().toISOString()
+    createdAt: formatMemoryTimestamp()
   };
 
   setStoredMemories([...getStoredMemories(), memory]);
@@ -51,6 +51,28 @@ function addMemory(text) {
 
 function clearMemories() {
   return setStoredMemories([]);
+}
+
+function formatMemoryTimestamp(date = new Date()) {
+  const months = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'];
+  const year = date.getFullYear();
+  const month = months[date.getMonth()];
+  const day = String(date.getDate()).padStart(2, '0');
+  const hours24 = date.getHours();
+  const hours12 = String(hours24 % 12 || 12).padStart(2, '0');
+  const minutes = String(date.getMinutes()).padStart(2, '0');
+  const seconds = String(date.getSeconds()).padStart(2, '0');
+  const period = hours24 >= 12 ? 'PM' : 'AM';
+  const offsetMinutes = -date.getTimezoneOffset();
+  const offsetSign = offsetMinutes >= 0 ? '+' : '-';
+  const absoluteOffset = Math.abs(offsetMinutes);
+  const offsetHours = Math.floor(absoluteOffset / 60);
+  const offsetRemainder = absoluteOffset % 60;
+  const offset = offsetRemainder
+    ? `${offsetSign}${offsetHours}:${String(offsetRemainder).padStart(2, '0')}`
+    : `${offsetSign}${offsetHours}`;
+
+  return `${year}-${month}-${day} ${hours12}:${minutes}:${seconds} ${period} (GMT${offset})`;
 }
 
 function formatMemoryPrompt(memories = getStoredMemories()) {
@@ -218,6 +240,7 @@ const GeminiApi = {
   extractMemoryCommand,
   formatMemoryLog,
   formatMemoryPrompt,
+  formatMemoryTimestamp,
   getStoredMemories,
   askGemini,
   askGeminiText,
