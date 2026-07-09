@@ -25,6 +25,9 @@ body {
   width: 100%;
   border: 1px solid rgba(168, 212, 168, 0.18);
   background: #131813;
+  border-radius: 1.25rem;
+  box-shadow: 0 24px 60px rgba(0, 0, 0, 0.24);
+  overflow: hidden;
 }
 
 .chat-header {
@@ -60,10 +63,19 @@ h1 {
 .clear-btn,
 .chat-form button {
   border: 0;
+  border-radius: 999px;
   background: #a8d4a8;
   color: #0d110d;
   cursor: pointer;
   font-weight: 700;
+  transition: background 0.16s ease, transform 0.16s ease, box-shadow 0.16s ease;
+}
+
+.clear-btn:hover,
+.chat-form button:hover {
+  background: #c4e6c4;
+  box-shadow: 0 8px 20px rgba(106, 170, 106, 0.18);
+  transform: translateY(-1px);
 }
 
 .clear-btn {
@@ -147,6 +159,7 @@ h1 {
   min-width: 0;
   padding: 0.8rem 0.9rem;
   border: 1px solid rgba(168, 212, 168, 0.18);
+  border-radius: 999px;
   background: #1a211a;
   color: #e8ede8;
   outline: none;
@@ -178,16 +191,19 @@ h1 {
   place-items: center;
   padding: 1rem;
   background: rgba(13, 17, 13, 0.72);
+  backdrop-filter: blur(4px);
 }
 
 .memory-window {
   width: min(560px, 100%);
   max-height: min(520px, calc(100vh - 2rem));
   border: 1px solid rgba(168, 212, 168, 0.22);
+  border-radius: 1.25rem;
   background: #131813;
   box-shadow: 0 20px 50px rgba(0, 0, 0, 0.35);
   display: flex;
   flex-direction: column;
+  overflow: hidden;
 }
 
 .memory-window-header {
@@ -208,11 +224,18 @@ h1 {
   width: 2rem;
   height: 2rem;
   border: 0;
+  border-radius: 999px;
   background: rgba(168, 212, 168, 0.12);
   color: #e8ede8;
   cursor: pointer;
   font-size: 1.25rem;
   line-height: 1;
+  transition: background 0.16s ease, transform 0.16s ease;
+}
+
+.memory-close:hover {
+  background: rgba(168, 212, 168, 0.22);
+  transform: translateY(-1px);
 }
 
 .memory-window-actions {
