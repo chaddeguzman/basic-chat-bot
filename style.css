@@ -78,6 +78,31 @@ h1 {
   display: flex;
   flex-direction: column;
   gap: 0.8rem;
+  scrollbar-color: #6aaa6a #1a211a;
+  scrollbar-width: thin;
+}
+
+.chat-box::-webkit-scrollbar,
+.memory-log::-webkit-scrollbar {
+  width: 0.75rem;
+}
+
+.chat-box::-webkit-scrollbar-track,
+.memory-log::-webkit-scrollbar-track {
+  background: #1a211a;
+  border-radius: 999px;
+}
+
+.chat-box::-webkit-scrollbar-thumb,
+.memory-log::-webkit-scrollbar-thumb {
+  background: linear-gradient(180deg, #a8d4a8, #6aaa6a);
+  border: 2px solid #1a211a;
+  border-radius: 999px;
+}
+
+.chat-box::-webkit-scrollbar-thumb:hover,
+.memory-log::-webkit-scrollbar-thumb:hover {
+  background: linear-gradient(180deg, #c4e6c4, #7cc67c);
 }
 
 .message {
@@ -207,6 +232,8 @@ h1 {
   color: #b7c7b7;
   font-family: Consolas, "Courier New", monospace;
   line-height: 1.5;
+  scrollbar-color: #6aaa6a #1a211a;
+  scrollbar-width: thin;
 }
 
 @media (max-width: 640px) {
