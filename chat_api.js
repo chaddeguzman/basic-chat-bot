@@ -1,6 +1,8 @@
 // --- YOUR GOOGLE GEMINI API KEY ---
 const API_KEY = '__CHATBOT_API__';
-const API_URL = `https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-flash:generateContent?key=${API_KEY}`;
+//const MODEL_NAME = 'gemini-2.5-flash';
+const MODEL_NAME = 'gemini-3.1-flash-lite';
+const API_URL = `https://generativelanguage.googleapis.com/v1beta/models/${MODEL_NAME}:generateContent?key=${API_KEY}`;
 const API_KEY_PLACEHOLDERS = new Set(['', 'CHATBOT_API', ['__', 'CHATBOT_API', '__'].join('')]);
 const MEMORY_STORAGE_KEY = 'gemini-chat-memory-log';
 
@@ -233,6 +235,7 @@ const GeminiApi = {
   API_KEY,
   API_URL,
   API_KEY_PLACEHOLDERS,
+  MODEL_NAME,
   MEMORY_STORAGE_KEY,
   addMemory,
   buildPrompt,
