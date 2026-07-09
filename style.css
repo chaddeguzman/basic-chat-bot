@@ -36,6 +36,13 @@ body {
   border-bottom: 1px solid rgba(168, 212, 168, 0.12);
 }
 
+.header-actions {
+  display: flex;
+  gap: 0.6rem;
+  flex-wrap: wrap;
+  justify-content: flex-end;
+}
+
 .eyebrow {
   margin: 0 0 0.25rem;
   color: #6aaa6a;
@@ -147,6 +154,15 @@ h1 {
   .chat-header,
   .chat-form {
     padding: 1rem;
+  }
+
+  .chat-header {
+    align-items: flex-start;
+    flex-direction: column;
+  }
+
+  .header-actions {
+    justify-content: flex-start;
   }
 
   .chat-box {
