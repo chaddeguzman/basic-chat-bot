@@ -4,6 +4,7 @@ const chatInput = document.getElementById('chatInput');
 const sendBtn = document.getElementById('sendBtn');
 const clearBtn = document.getElementById('clearBtn');
 const memoryLogBtn = document.getElementById('memoryLogBtn');
+const downloadChatBtn = document.getElementById('downloadChatBtn');
 const clearMemoryBtn = document.getElementById('clearMemoryBtn');
 const downloadMemoryBtn = document.getElementById('downloadMemoryBtn');
 const closeMemoryBtn = document.getElementById('closeMemoryBtn');
@@ -11,6 +12,12 @@ const memoryModal = document.getElementById('memoryModal');
 const memoryLogOutput = document.getElementById('memoryLogOutput');
 
 const chat = GeminiApi.createGeminiChat();
+const chatTranscript = [
+  {
+    role: 'bot',
+    text: 'Hi. Ask me anything, and I will keep it clear and useful.'
+  }
+];
 
 chatForm.addEventListener('submit', event => {
   event.preventDefault();
@@ -19,11 +26,17 @@ chatForm.addEventListener('submit', event => {
 
 clearBtn.addEventListener('click', () => {
   chat.history.length = 0;
+  chatTranscript.length = 0;
+  chatTranscript.push({
+    role: 'bot',
+    text: 'Chat cleared. What would you like to talk about?'
+  });
   chatBox.innerHTML = '<div class="message bot">Chat cleared. What would you like to talk about?</div>';
   chatInput.focus();
 });
 
 memoryLogBtn.addEventListener('click', openMemoryLog);
+downloadChatBtn.addEventListener('click', downloadChatHistory);
 clearMemoryBtn.addEventListener('click', clearMemory);
 downloadMemoryBtn.addEventListener('click', downloadMemoryLog);
 closeMemoryBtn.addEventListener('click', closeMemoryLog);
@@ -41,6 +54,7 @@ function appendMessage(role, text) {
   message.textContent = text;
   chatBox.appendChild(message);
   chatBox.scrollTop = chatBox.scrollHeight;
+  chatTranscript.push({ role, text });
   return message;
 }
 
@@ -65,9 +79,11 @@ async function sendMessage() {
   try {
     const reply = await chat.sendMessage(message);
     typing.textContent = reply;
+    chatTranscript[chatTranscript.length - 1].text = reply;
   } catch (error) {
     typing.className = 'message error';
     typing.textContent = error.message || 'Something went wrong. Please try again.';
+    chatTranscript[chatTranscript.length - 1].text = typing.textContent;
   }
 
   sendBtn.disabled = false;
@@ -89,16 +105,73 @@ function closeMemoryLog() {
 function downloadMemoryLog() {
   const log = GeminiApi.formatMemoryLog();
   const content = log || '# No local memories saved yet.';
+  downloadTextFile('memory.log', content);
+}
+
+function downloadChatHistory() {
+  const userLabel = getUserTranscriptLabel();
+  const content = chatTranscript
+    .map(entry => {
+      const label = entry.role === 'user' ? userLabel : 'ChatBot';
+      return `${label}:\n${entry.text}`;
+    })
+    .join('\n\n');
+
+  downloadTextFile('chat-history.txt', content || 'ChatBot:\nNo chat history yet.');
+}
+
+function downloadTextFile(filename, content) {
   const blob = new Blob([content], { type: 'text/plain' });
   const url = URL.createObjectURL(blob);
   const link = document.createElement('a');
 
   link.href = url;
-  link.download = 'memory.log';
+  link.download = filename;
   document.body.appendChild(link);
   link.click();
   link.remove();
   URL.revokeObjectURL(url);
+}
+
+function getUserTranscriptLabel() {
+  const transcriptName = chatTranscript
+    .filter(entry => entry.role === 'user')
+    .map(entry => extractUserName(entry.text))
+    .find(Boolean);
+
+  if (transcriptName) return transcriptName;
+
+  const memoryName = GeminiApi.getStoredMemories()
+    .map(memory => typeof memory === 'string' ? memory : memory?.text)
+    .map(extractUserName)
+    .find(Boolean);
+
+  return memoryName || 'User';
+}
+
+function extractUserName(text) {
+  const cleanText = String(text || '').trim();
+  const patterns = [
+    /\bmy name is\s+([a-z][a-z .'-]{0,40})/i,
+    /\bi am\s+([a-z][a-z .'-]{0,40})/i,
+    /\bi'm\s+([a-z][a-z .'-]{0,40})/i,
+    /\bcall me\s+([a-z][a-z .'-]{0,40})/i
+  ];
+
+  for (const pattern of patterns) {
+    const match = cleanText.match(pattern);
+    if (match?.[1]) return cleanName(match[1]);
+  }
+
+  return '';
+}
+
+function cleanName(name) {
+  return name
+    .replace(/\b(?:and|but|because|so|with|from|who)\b.*$/i, '')
+    .replace(/[.!?,:;].*$/, '')
+    .replace(/\s+/g, ' ')
+    .trim();
 }
 
 function clearMemory() {
