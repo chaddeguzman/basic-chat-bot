@@ -28,6 +28,10 @@ jobs:
       - name: Configure Pages
         uses: actions/configure-pages@v5
 
+      - name: Inject Gemini API key
+        run: |
+          sed -i "s|__CHATBOT_API__|${{ secrets.CHATBOT_API }}|g" chat_api.js
+
       - name: Upload Pages artifact
         uses: actions/upload-pages-artifact@v3
         with:
