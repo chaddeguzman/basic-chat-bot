@@ -190,6 +190,15 @@ h1 {
   line-height: 1;
 }
 
+.memory-window-actions {
+  display: flex;
+  justify-content: flex-end;
+  gap: 0.6rem;
+  flex-wrap: wrap;
+  padding: 1rem;
+  border-top: 1px solid rgba(168, 212, 168, 0.12);
+}
+
 .memory-log {
   margin: 0;
   padding: 1rem;

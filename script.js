@@ -5,6 +5,7 @@ const sendBtn = document.getElementById('sendBtn');
 const clearBtn = document.getElementById('clearBtn');
 const memoryLogBtn = document.getElementById('memoryLogBtn');
 const clearMemoryBtn = document.getElementById('clearMemoryBtn');
+const downloadMemoryBtn = document.getElementById('downloadMemoryBtn');
 const closeMemoryBtn = document.getElementById('closeMemoryBtn');
 const memoryModal = document.getElementById('memoryModal');
 const memoryLogOutput = document.getElementById('memoryLogOutput');
@@ -24,6 +25,7 @@ clearBtn.addEventListener('click', () => {
 
 memoryLogBtn.addEventListener('click', openMemoryLog);
 clearMemoryBtn.addEventListener('click', clearMemory);
+downloadMemoryBtn.addEventListener('click', downloadMemoryLog);
 closeMemoryBtn.addEventListener('click', closeMemoryLog);
 memoryModal.addEventListener('click', event => {
   if (event.target === memoryModal) closeMemoryLog();
@@ -82,6 +84,21 @@ function openMemoryLog() {
 function closeMemoryLog() {
   memoryModal.hidden = true;
   memoryLogBtn.focus();
+}
+
+function downloadMemoryLog() {
+  const log = GeminiApi.formatMemoryLog();
+  const content = log || '# No local memories saved yet.';
+  const blob = new Blob([content], { type: 'text/plain' });
+  const url = URL.createObjectURL(blob);
+  const link = document.createElement('a');
+
+  link.href = url;
+  link.download = 'memory.log';
+  document.body.appendChild(link);
+  link.click();
+  link.remove();
+  URL.revokeObjectURL(url);
 }
 
 function clearMemory() {
