@@ -1,0 +1,41 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Basic Gemini Chat</title>
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+  <main class="app-shell">
+    <section class="chat-panel">
+      <header class="chat-header">
+        <div>
+          <p class="eyebrow">Gemini 2.5 Flash</p>
+          <h1>Basic Gemini Chat</h1>
+        </div>
+        <button class="clear-btn" id="clearBtn" type="button">Clear</button>
+      </header>
+
+      <div class="chat-box" id="chatBox" aria-live="polite">
+        <div class="message bot">
+          Hi. Ask me anything, and I will keep it clear and useful.
+        </div>
+      </div>
+
+      <form class="chat-form" id="chatForm">
+        <input
+          id="chatInput"
+          type="text"
+          placeholder="Type your message..."
+          autocomplete="off"
+        >
+        <button id="sendBtn" type="submit">Send</button>
+      </form>
+    </section>
+  </main>
+
+  <script src="chat_api.js"></script>
+  <script src="script.js"></script>
+</body>
+</html>
