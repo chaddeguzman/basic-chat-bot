@@ -15,7 +15,8 @@
           <h1>Basic Gemini Chat</h1>
         </div>
         <div class="header-actions">
-          <button class="clear-btn" id="downloadMemoryBtn" type="button">Memory Log</button>
+          <button class="clear-btn" id="memoryLogBtn" type="button">Memory Log</button>
+          <button class="clear-btn" id="clearMemoryBtn" type="button">Clear Memory</button>
           <button class="clear-btn" id="clearBtn" type="button">Clear</button>
         </div>
       </header>
@@ -37,6 +38,16 @@
       </form>
     </section>
   </main>
+
+  <div class="memory-modal" id="memoryModal" hidden>
+    <div class="memory-window" role="dialog" aria-modal="true" aria-labelledby="memoryTitle">
+      <header class="memory-window-header">
+        <h2 id="memoryTitle">Local Memory Log</h2>
+        <button class="memory-close" id="closeMemoryBtn" type="button" aria-label="Close memory log">×</button>
+      </header>
+      <pre class="memory-log" id="memoryLogOutput"></pre>
+    </div>
+  </div>
 
   <script src="chat_api.js"></script>
   <script src="script.js"></script>

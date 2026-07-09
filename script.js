@@ -3,7 +3,11 @@ const chatForm = document.getElementById('chatForm');
 const chatInput = document.getElementById('chatInput');
 const sendBtn = document.getElementById('sendBtn');
 const clearBtn = document.getElementById('clearBtn');
-const downloadMemoryBtn = document.getElementById('downloadMemoryBtn');
+const memoryLogBtn = document.getElementById('memoryLogBtn');
+const clearMemoryBtn = document.getElementById('clearMemoryBtn');
+const closeMemoryBtn = document.getElementById('closeMemoryBtn');
+const memoryModal = document.getElementById('memoryModal');
+const memoryLogOutput = document.getElementById('memoryLogOutput');
 
 const chat = GeminiApi.createGeminiChat();
 
@@ -18,7 +22,16 @@ clearBtn.addEventListener('click', () => {
   chatInput.focus();
 });
 
-downloadMemoryBtn.addEventListener('click', downloadMemoryLog);
+memoryLogBtn.addEventListener('click', openMemoryLog);
+clearMemoryBtn.addEventListener('click', clearMemory);
+closeMemoryBtn.addEventListener('click', closeMemoryLog);
+memoryModal.addEventListener('click', event => {
+  if (event.target === memoryModal) closeMemoryLog();
+});
+
+document.addEventListener('keydown', event => {
+  if (event.key === 'Escape' && !memoryModal.hidden) closeMemoryLog();
+});
 
 function appendMessage(role, text) {
   const message = document.createElement('div');
@@ -59,17 +72,23 @@ async function sendMessage() {
   chatInput.focus();
 }
 
-function downloadMemoryLog() {
+function openMemoryLog() {
   const log = GeminiApi.formatMemoryLog();
-  const content = log || '# No local memories saved yet.';
-  const blob = new Blob([content], { type: 'text/plain' });
-  const url = URL.createObjectURL(blob);
-  const link = document.createElement('a');
+  memoryLogOutput.textContent = log || 'No local memories saved yet.';
+  memoryModal.hidden = false;
+  closeMemoryBtn.focus();
+}
 
-  link.href = url;
-  link.download = 'memory.log';
-  document.body.appendChild(link);
-  link.click();
-  link.remove();
-  URL.revokeObjectURL(url);
+function closeMemoryLog() {
+  memoryModal.hidden = true;
+  memoryLogBtn.focus();
+}
+
+function clearMemory() {
+  GeminiApi.clearMemories();
+  if (!memoryModal.hidden) {
+    memoryLogOutput.textContent = 'No local memories saved yet.';
+  }
+  appendMessage('bot', 'Local memory cleared. I will start fresh from here.');
+  chatInput.focus();
 }
